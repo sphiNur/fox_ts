@@ -13,7 +13,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelView']);
 
 const activeTab = ref(props.modelView)
 
@@ -23,7 +23,7 @@ watch(() => props.modelView, (newVal) => {
 
 function handleTabChange(index: number) {
   activeTab.value = index;
-  emit('update:modelValue', index);
+  emit('update:modelView', index);
 }
 </script>
 
