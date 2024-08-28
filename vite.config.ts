@@ -12,5 +12,12 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  }
+  },
+  build: {
+    outDir: 'docs'
+  },
+  preview: {
+    outDir: 'docs',
+  },
+  base: '/fox/'
 })
