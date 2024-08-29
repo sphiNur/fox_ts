@@ -1,29 +1,37 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-// Define the props interface
+/**
+ * Interface defining the props for the DailyItems component
+ */
 interface Props {
-  name: string;
-  modelValue: number | string | any[];
-  type?: string;
-  onEditClick?: () => void;
+  name: string;                   // The label name for the input
+  modelValue: number | string | any[]; // The value of the input
+  type?: string;                  // The type of the input (default: 'number')
+  onEditClick?: () => void;       // Optional callback for edit button click
 }
 
-// Set default props
+// Set default props using withDefaults
 const props = withDefaults(defineProps<Props>(), {
   type: 'number'
 });
 
-// Define emits
+// Define emits for the component
 const emit = defineEmits(['update:modelValue']);
 
-// Computed property for two-way binding
+/**
+ * Computed property for two-way data binding
+ * Gets the current value and emits updates to the parent
+ */
 const inputValue = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value)
 });
 
-// Handle input changes
+/**
+ * Handles input changes and emits the updated value
+ * @param event - The input event
+ */
 function handleInput(event: Event) {
   const target = event.target as HTMLInputElement;
   if (props.type === 'number') {
@@ -32,13 +40,24 @@ function handleInput(event: Event) {
     emit('update:modelValue', target.value);
   }
 }
+
+function handleFocus(event: FocusEvent) {
+  const target = event.target as HTMLInputElement;
+  setTimeout(() => {
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 300);
+}
+
+function handleBlur() {
+  window.scrollTo(0, 0);
+}
 </script>
 
 <template>
   <label class="input input-bordered flex items-center gap-2">
     {{ props.name }}
-    <input v-if="type !== 'array'" :type="type" class="grow" :value="inputValue" @input="handleInput"
-      :disabled="type === 'array'" />
+    <input v-if="type !== 'array'" inputmode="decimal" :type="type" class="grow" :value="inputValue"
+      @input="handleInput" :disabled="type === 'array'" :focus="handleFocus" :blur="handleBlur" />
     <div v-else class="grow">
       {{ (modelValue as any[]).length }} items
     </div>

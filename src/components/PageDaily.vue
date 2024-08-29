@@ -3,12 +3,16 @@ import { ref, computed } from "vue";
 import { useDailyData } from "@/DataTypes";
 import ActionModal from "@/components/ActionModal.vue";
 import DailyItems from "@/components/DailyItems.vue";
+import { useUserStore } from "@/PiniaStore";
 
-// 定义 emit
+// Get the user store
+const userStore = useUserStore();
+
+// Define emit for parent component communication
 const emit = defineEmits(['switch-to-summary']);
 
 // Initialize daily data and modal-related reactive variables
-const dailyData = useDailyData();
+const dailyData = useDailyData(userStore.userId?.valueOf() ?? 0);
 const modalVisible = ref(false);
 const isLoading = ref(false);
 const modalContent = ref('');
@@ -66,48 +70,45 @@ function removeItem(index: number) {
   }
 }
 
-// 定义一个异步函数来发送请求
+// Define an async function to send POST request
 async function sendPostRequest() {
   try {
     const response = await fetch('https://grammybot.sphinxr.workers.dev/api/post/insert/daily', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Operator-ID': `${userStore.userId?.valueOf() ?? 0}`,
       },
       body: JSON.stringify(dailyData),
     });
 
     if (!response.ok) {
-      new Error(`HTTP 错误！状态: ${response.status}`);
+      new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
-    console.log('提交成功:', data);
+    console.log('Submission successful:', data);
 
-    // 更新 modal 内容以显示响应
-    // modalContent.value = JSON.stringify(data, null, 2);
-    modalTitle.value = '提交成功';
-    // modalVisible.value = true;
+    // Update modal content to show response
+    modalTitle.value = 'Submission Successful';
 
     setTimeout(() => {
-      // 关闭模态框
+      // Close the modal
       modalVisible.value = false;
 
-      // 切换到 Summary 页面
+      // Switch to Summary page
       emit('switch-to-summary');
-    }, 1500)
+    }, 1000)
   } catch (error) {
-    console.error('提交失败:', error);
+    console.error('Submission failed:', error);
 
-    // 更新 modal 内容以显示错误信息
-    modalContent.value = `提交失败: ${error}`;
-    modalTitle.value = '提交错误';
-    // modalVisible.value = true;
+    // Update modal content to show error message
+    modalContent.value = `Submission failed: ${error}`;
+    modalTitle.value = 'Submission Error';
   } finally {
     isLoading.value = false;
   }
 }
-
 
 // Function to submit the form
 function submitForm() {
@@ -118,15 +119,11 @@ function submitForm() {
     modalVisible.value = true;
     isLoading.value = true;
 
-    // 调用异步函数
+    // Call the async function
     sendPostRequest();
   } else {
     const missingFields = [];
     if (dailyData.date === '') missingFields.push('Date');
-    // if (typeof dailyData.bank !== 'number') missingFields.push('Bank');
-    // if (typeof dailyData.market !== 'number') missingFields.push('Market');
-    // if (typeof dailyData.bank_cash !== 'number') missingFields.push('Bank Cash');
-    // if (typeof dailyData.cash !== 'number') missingFields.push('Cash');
 
     modalContent.value = `Please fill in the following required fields: ${missingFields.join(', ')}`;
     modalTitle.value = 'Submission Failed';
@@ -139,6 +136,17 @@ function closeModal() {
   modalVisible.value = false;
   editingField.value = '';
   errorMessage.value = '';
+}
+
+function handleFocus(event: FocusEvent) {
+  const target = event.target as HTMLInputElement;
+  setTimeout(() => {
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 300);
+}
+
+function handleBlur() {
+  window.scrollTo(0, 0);
 }
 </script>
 
@@ -163,10 +171,11 @@ function closeModal() {
       </template>
       <template v-else-if="editingField === 'payment'">
         <div class="join mb-4">
-          <input v-model="newPayment.name" class="input input-bordered join-item w-2/5" placeholder="Name" />
-          <input v-model.number="newPayment.price" type="number" class="input input-bordered join-item w-2/5"
-            placeholder="Price" />
-          <button @click="addItem" class="btn join-item w-1/5">Add</button>
+          <input v-model="newPayment.name" class="input input-bordered join-item w-2/5" placeholder="Name"
+            :focus="handleFocus" :blur="handleBlur" />
+          <input v-model.number="newPayment.price" type="number" inputmode="decimal"
+            class="input input-bordered join-item w-2/5" placeholder="Price" :focus="handleFocus" :blur="handleBlur" />
+          <button @click="addItem" class="btn btn-neutral join-item w-1/5">Add</button>
         </div>
         <p v-if="errorMessage" class="text-error mb-2">{{ errorMessage }}</p>
         <div class="overflow-x-auto">
@@ -190,10 +199,11 @@ function closeModal() {
       </template>
       <template v-else-if="editingField === 'salary'">
         <div class="join mb-4">
-          <input v-model="newSalary.employee" class="input input-bordered join-item w-2/5" placeholder="Employee" />
-          <input v-model.number="newSalary.salary" type="number" class="input input-bordered join-item w-2/5"
-            placeholder="Salary" />
-          <button @click="addItem" class="btn join-item w-1/5">Add</button>
+          <input v-model="newSalary.employee" class="input input-bordered join-item w-2/5" placeholder="Employee"
+            :focus="handleFocus" :blur="handleBlur" />
+          <input v-model.number="newSalary.salary" type="number" inputmode="decimal"
+            class="input input-bordered join-item w-2/5" placeholder="Salary" :focus="handleFocus" :blur="handleBlur" />
+          <button @click="addItem" class="btn btn-neutral join-item w-1/5">Add</button>
         </div>
         <p v-if="errorMessage" class="text-error mb-2">{{ errorMessage }}</p>
         <div class="overflow-x-auto">
