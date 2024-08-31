@@ -98,17 +98,6 @@ function removeSalary(index: number) {
         editedItem.value.salary.splice(index, 1);
     }
 }
-
-function handleFocus(event: FocusEvent) {
-    const target = event.target as HTMLInputElement;
-    setTimeout(() => {
-        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 300);
-}
-
-function handleBlur() {
-    window.scrollTo(0, 0);
-}
 </script>
 
 <template>
@@ -129,21 +118,18 @@ function handleBlur() {
                         <div class="collapse-content">
                             <div class="join">
                                 <input v-model="newPaymentName" class="input input-bordered join-item w-2/5"
-                                    placeholder="Name" :focus="handleFocus" :blur="handleBlur" />
+                                    placeholder="Name" />
                                 <input v-model.number="newPaymentPrice" type="number" inputmode="decimal"
-                                    class="input input-bordered join-item w-2/5" placeholder="Amount"
-                                    :focus="handleFocus" :blur="handleBlur" />
+                                    class="input input-bordered join-item w-2/5" placeholder="Amount"/>
                                 <button class="btn btn-neutral join-item w-1/5 p-0" @click="addPayment"
                                     type="button">Add</button>
                             </div>
                             <div class="divider mb-1 mt-1"></div>
                             <div v-for="(payment, index) in editedItem.payment" :key="index" class="join mb-1">
                                 <input v-model="payment.name" placeholder="Name"
-                                    class="input input-bordered join-item  w-2/5" :focus="handleFocus"
-                                    :blur="handleBlur" />
+                                    class="input input-bordered join-item  w-2/5" />
                                 <input v-model.number="payment.price" type="number" inputmode="decimal"
-                                    placeholder="Amount" class="input input-bordered join-item  w-2/5"
-                                    :focus="handleFocus" :blur="handleBlur" />
+                                    placeholder="Amount" class="input input-bordered join-item  w-2/5"/>
                                 <button @click="removePayment(index)" type="button"
                                     class="btn btn-error join-item  w-1/5 p-0">Delete
                                 </button>
@@ -157,21 +143,18 @@ function handleBlur() {
                         <div class="collapse-content">
                             <div class="join">
                                 <input v-model="newSalaryEmployee" class="input input-bordered join-item w-2/5"
-                                    placeholder="Employee" :focus="handleFocus" :blur="handleBlur" />
+                                    placeholder="Employee"/>
                                 <input v-model.number="newSalaryAmount" type="number" inputmode="decimal"
-                                    class="input input-bordered join-item w-2/5" placeholder="Salary"
-                                    :focus="handleFocus" :blur="handleBlur" />
+                                    class="input input-bordered join-item w-2/5" placeholder="Salary"/>
                                 <button class="btn btn-neutral join-item w-1/5 p-0" @click="addSalary"
                                     type="button">Add</button>
                             </div>
                             <div class="divider mb-1 mt-1"></div>
                             <div v-for="(salary, index) in editedItem.salary" :key="index" class="join mb-1">
                                 <input v-model="salary.employee" placeholder="Employee"
-                                    class="input input-bordered join-item  w-2/5" :focus="handleFocus"
-                                    :blur="handleBlur" />
+                                    class="input input-bordered join-item  w-2/5"/>
                                 <input v-model.number="salary.salary" type="number" inputmode="decimal"
-                                    placeholder="Salary" class="input input-bordered join-item  w-2/5"
-                                    :focus="handleFocus" :blur="handleBlur" />
+                                    placeholder="Salary" class="input input-bordered join-item  w-2/5"/>
                                 <button @click="removeSalary(index)" type="button"
                                     class="btn btn-error join-item  w-1/5 p-0">Delete
                                 </button>

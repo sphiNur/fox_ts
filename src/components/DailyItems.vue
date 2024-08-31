@@ -40,24 +40,13 @@ function handleInput(event: Event) {
     emit('update:modelValue', target.value);
   }
 }
-
-function handleFocus(event: FocusEvent) {
-  const target = event.target as HTMLInputElement;
-  setTimeout(() => {
-    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 300);
-}
-
-function handleBlur() {
-  window.scrollTo(0, 0);
-}
 </script>
 
 <template>
   <label class="input input-bordered flex items-center gap-2">
     {{ props.name }}
     <input v-if="type !== 'array'" inputmode="decimal" :type="type" class="grow" :value="inputValue"
-      @input="handleInput" :disabled="type === 'array'" :focus="handleFocus" :blur="handleBlur" />
+      @input="handleInput" :disabled="type === 'array'"/>
     <div v-else class="grow">
       {{ (modelValue as any[]).length }} items
     </div>

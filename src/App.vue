@@ -5,7 +5,6 @@ import PageDaily from "@/components/PageDaily.vue";
 import PageSummary from "@/components/PageSummary.vue";
 import { computed, onMounted, ref } from "vue";
 import { useUserStore } from "@/PiniaStore";
-import KeyboardAwareView from '@/components/KeyboardAwareView.vue';
 
 // Initialize the current tab index
 const currentTab = ref(0);
@@ -55,7 +54,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <KeyboardAwareView>
     <header>
       <!-- Render the header tab component -->
       <HeaderTab v-model:modelView="currentTab" :tabs="tabList" />
@@ -65,5 +63,4 @@ onMounted(() => {
       <!-- Dynamically render the current tab component -->
       <component :is="TabComponent" @switch-to-summary="switchToSummary" />
     </main>
-  </KeyboardAwareView>
 </template>

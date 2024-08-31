@@ -49,7 +49,7 @@ function closeModal() {
   <!-- Modal dialog with bottom positioning -->
   <dialog id="my_modal_3" class="modal modal-bottom">
     <!-- Modal content container -->
-    <div class="modal-box p-4 max-h-80">
+    <div class="modal-box p-4">
       <!-- Form for handling modal close action -->
       <form method="dialog">
         <!-- Close button in the top-right corner -->

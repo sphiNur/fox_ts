@@ -137,17 +137,6 @@ function closeModal() {
   editingField.value = '';
   errorMessage.value = '';
 }
-
-function handleFocus(event: FocusEvent) {
-  const target = event.target as HTMLInputElement;
-  setTimeout(() => {
-    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 300);
-}
-
-function handleBlur() {
-  window.scrollTo(0, 0);
-}
 </script>
 
 <template>
@@ -171,10 +160,9 @@ function handleBlur() {
       </template>
       <template v-else-if="editingField === 'payment'">
         <div class="join mb-4">
-          <input v-model="newPayment.name" class="input input-bordered join-item w-2/5" placeholder="Name"
-            :focus="handleFocus" :blur="handleBlur" />
+          <input v-model="newPayment.name" class="input input-bordered join-item w-2/5" placeholder="Name"/>
           <input v-model.number="newPayment.price" type="number" inputmode="decimal"
-            class="input input-bordered join-item w-2/5" placeholder="Price" :focus="handleFocus" :blur="handleBlur" />
+            class="input input-bordered join-item w-2/5" placeholder="Price"/>
           <button @click="addItem" class="btn btn-neutral join-item w-1/5">Add</button>
         </div>
         <p v-if="errorMessage" class="text-error mb-2">{{ errorMessage }}</p>
@@ -199,10 +187,9 @@ function handleBlur() {
       </template>
       <template v-else-if="editingField === 'salary'">
         <div class="join mb-4">
-          <input v-model="newSalary.employee" class="input input-bordered join-item w-2/5" placeholder="Employee"
-            :focus="handleFocus" :blur="handleBlur" />
+          <input v-model="newSalary.employee" class="input input-bordered join-item w-2/5" placeholder="Employee"/>
           <input v-model.number="newSalary.salary" type="number" inputmode="decimal"
-            class="input input-bordered join-item w-2/5" placeholder="Salary" :focus="handleFocus" :blur="handleBlur" />
+            class="input input-bordered join-item w-2/5" placeholder="Salary"/>
           <button @click="addItem" class="btn btn-neutral join-item w-1/5">Add</button>
         </div>
         <p v-if="errorMessage" class="text-error mb-2">{{ errorMessage }}</p>
